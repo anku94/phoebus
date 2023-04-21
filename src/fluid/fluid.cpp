@@ -10,6 +10,7 @@
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
 // publicly, and to permit others to do so.
+#include <outputs/tau_types.h>
 
 #include "fluid.hpp"
 
@@ -602,6 +603,8 @@ TaskStatus CalculateFluidSourceTerms(MeshBlockData<Real> *rc,
 }
 
 TaskStatus CalculateFluxes(MeshBlockData<Real> *rc) {
+  double _prof_ts_beg = tau::GetUsSince(0);
+
   auto *pmb = rc->GetParentPointer().get();
   if (!pmb->packages.Get("fluid")->Param<bool>("active"))
     return TaskStatus::complete;
@@ -666,6 +669,9 @@ TaskStatus CalculateFluxes(MeshBlockData<Real> *rc) {
     PARTHENON_THROW("Invalid riemann solver option.");
   }
 #undef FLUX
+
+  double _prof_ts = tau::GetUsSince(_prof_ts_beg);
+  tau::LogBlockEvent(pmb->gid, TAU_BLKEVT_US_CF, _prof_ts);
 
   return TaskStatus::complete;
 }
