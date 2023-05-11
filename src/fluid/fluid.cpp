@@ -672,6 +672,7 @@ TaskStatus CalculateFluxes(MeshBlockData<Real> *rc) {
 
   double _prof_ts = tau::GetUsSince(_prof_ts_beg);
   tau::LogBlockEvent(pmb->gid, TAU_BLKEVT_US_CF, _prof_ts);
+  pmb->AddCostForLoadBalancing(_prof_ts / 1e3);
 
   return TaskStatus::complete;
 }
