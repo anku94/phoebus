@@ -2,10 +2,10 @@
 // This program was produced under U.S. Government contract
 // 89233218CNA000001 for Los Alamos National Laboratory (LANL), which
 // is operated by Triad National Security, LLC for the U.S.
-// Department of Energy/National Nuclear Security Administration. All
+// Department of Energy/National Nuclear Security Administrobust::ration. All
 // rights in the program are reserved by Triad National Security, LLC,
 // and the U.S. Department of Energy/National Nuclear Security
-// Administration. The Government is granted for itself and others
+// Administrobust::ration. The Government is granted for itself and others
 // acting on its behalf a nonexclusive, paid-up, irrevocable worldwide
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
@@ -41,7 +41,6 @@ using radiation::ClosureSettings;
 using radiation::ClosureVerbosity;
 using radiation::Tens2;
 using radiation::Vec;
-using robust::ratio;
 
 namespace fixup {
 
@@ -437,9 +436,9 @@ TaskStatus ApplyFloorsImpl(T *rc, IndexDomain domain = IndexDomain::entire) {
           Real ye_prim_default = 0.5;
           eos_lambda[0] = ye_prim_default;
           Real dprs =
-              eos.PressureFromDensityInternalEnergy(drho, ratio(du, drho), eos_lambda);
-          Real dgm1 = ratio(
-              eos.BulkModulusFromDensityInternalEnergy(drho, ratio(du, drho), eos_lambda),
+              eos.PressureFromDensityInternalEnergy(drho, robust::ratio(du, drho), eos_lambda);
+          Real dgm1 = robust::ratio(
+              eos.BulkModulusFromDensityInternalEnergy(drho, robust::ratio(du, drho), eos_lambda),
               dprs);
           prim2con::p2c(drho, vp_normalobs, bp, du, ye_prim_default, dprs, dgm1, gcov,
                         gammacon, betacon, alpha, sdetgam, dcrho, dS, dBcons, dtau,
@@ -514,12 +513,12 @@ TaskStatus ApplyFloorsImpl(T *rc, IndexDomain domain = IndexDomain::entire) {
           // Update derived prims
           if (pye > 0) eos_lambda[0] = v(b, pye, k, j, i);
           v(b, tmp, k, j, i) = eos.TemperatureFromDensityInternalEnergy(
-              v(b, prho, k, j, i), ratio(v(b, peng, k, j, i), v(b, prho, k, j, i)),
+              v(b, prho, k, j, i), robust::ratio(v(b, peng, k, j, i), v(b, prho, k, j, i)),
               eos_lambda);
           v(b, prs, k, j, i) = eos.PressureFromDensityTemperature(
               v(b, prho, k, j, i), v(b, tmp, k, j, i), eos_lambda);
           v(b, gm1, k, j, i) =
-              ratio(eos.BulkModulusFromDensityTemperature(v(b, prho, k, j, i),
+              robust::ratio(eos.BulkModulusFromDensityTemperature(v(b, prho, k, j, i),
                                                           v(b, tmp, k, j, i), eos_lambda),
                     v(b, prs, k, j, i));
         }

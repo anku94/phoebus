@@ -2,10 +2,10 @@
 // program was produced under U.S. Government contract
 // 89233218CNA000001 for Los Alamos National Laboratory (LANL), which
 // is operated by Triad National Security, LLC for the U.S.
-// Department of Energy/National Nuclear Security Administration. All
+// Department of Energy/National Nuclear Security Administrobust::ration. All
 // rights in the program are reserved by Triad National Security, LLC,
 // and the U.S. Department of Energy/National Nuclear Security
-// Administration. The Government is granted for itself and others
+// Administrobust::ration. The Government is granted for itself and others
 // acting on its behalf a nonexclusive, paid-up, irrevocable worldwide
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
@@ -317,11 +317,11 @@ KOKKOS_FUNCTION ClosureStatus ClosureEdd<SET>::Con2Prim(Real E, const Vec cov_F,
   // const Real zeta = -W/lam*(((4*W2-4)/3 + vvPi)*E
   //                   -((4*W2-1)/3 + W2*vvPi)*vF);
   // a = 4 W^2/3 J + W zeta
-  const Real a = ratio(W2, lam) *
+  const Real a = robust::ratio(W2, lam) *
                  ((4 * W2 / 3 - vvTilPi) * E - ((4 * W2 + 1) / 3 - W2 * vvTilPi) * vF);
 
   // Calculate fluid rest frame (i.e. primitive) quantities
-  *J = ratio((2 * W2 - 1) * E - 2 * W2 * vF, lam);
+  *J = robust::ratio((2 * W2 - 1) * E - 2 * W2 * vF, lam);
   SPACELOOP(i) (*cov_tilH)(i) = (cov_F(i) - (*J) * cov_vTilPi(i) - cov_v(i) * a) / W;
 
   const Real xi =

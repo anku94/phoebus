@@ -30,6 +30,7 @@
 #include <globals.hpp>
 #include <kokkos_abstraction.hpp>
 #include <parthenon/package.hpp>
+#include <outputs/tau_types.hpp>
 #include <utils/error_checking.hpp>
 
 using parthenon::MetadataFlag;
@@ -628,6 +629,8 @@ TaskStatus CalculateFluidSourceTerms(MeshBlockData<Real> *rc,
 }
 
 TaskStatus CalculateFluxes(MeshBlockData<Real> *rc) {
+  double _prof_ts_beg = tau::GetUsSince(0);
+
   using namespace PhoebusReconstruction;
   auto *pmb = rc->GetParentPointer().get();
   auto &fluid = pmb->packages.Get("fluid");
@@ -738,6 +741,10 @@ TaskStatus CalculateFluxes(MeshBlockData<Real> *rc) {
     PARTHENON_THROW("Invalid riemann solver option.");
   }
 #undef FLUX
+
+  double _prof_ts = tau::GetUsSince(_prof_ts_beg);
+  tau::LogBlockEvent(pmb->gid, TAU_BLKEVT_US_CF, _prof_ts);
+  pmb->AddCostForLoadBalancing(_prof_ts);
 
   return TaskStatus::complete;
 }

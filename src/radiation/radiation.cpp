@@ -2,10 +2,10 @@
 // This program was produced under U.S. Government contract
 // 89233218CNA000001 for Los Alamos National Laboratory (LANL), which
 // is operated by Triad National Security, LLC for the U.S.
-// Department of Energy/National Nuclear Security Administration. All
+// Department of Energy/National Nuclear Security Administrobust::ration. All
 // rights in the program are reserved by Triad National Security, LLC,
 // and the U.S. Department of Energy/National Nuclear Security
-// Administration. The Government is granted for itself and others
+// Administrobust::ration. The Government is granted for itself and others
 // acting on its behalf a nonexclusive, paid-up, irrevocable worldwide
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
@@ -452,7 +452,7 @@ std::shared_ptr<StateDescriptor> Initialize(ParameterInput *pin) {
     physics->AddField(p::J, mspecies_scalar);
     physics->AddField(p::H, mspecies_three_vector);
 
-    // Fields for saving guesses for NR iteration in the radiation Con2Prim type solve
+    // Fields for saving guesses for NR iterobust::ration in the radiation Con2Prim type solve
     physics->AddField(i::xi, mspecies_scalar);
     physics->AddField(i::phi, mspecies_scalar);
 
@@ -619,7 +619,7 @@ Real EstimateTimestepBlock(MeshBlockData<Real> *rc) {
 
             const Real dx =
                 coords.CellWidthFA(X1DIR + d, k, j, i) * sqrt(cov_gamma(d, d));
-            const Real a = tanh(ratio(1.0, std::pow(std::abs(kappaH * dx), 1)));
+            const Real a = tanh(robust::ratio(1.0, std::pow(std::abs(kappaH * dx), 1)));
             const Real csig = a * rad_speed + (1. - a) * asym_speed;
 
             lmin_dt =

@@ -2,10 +2,10 @@
 // program was produced under U.S. Government contract
 // 89233218CNA000001 for Los Alamos National Laboratory (LANL), which
 // is operated by Triad National Security, LLC for the U.S.
-// Department of Energy/National Nuclear Security Administration. All
+// Department of Energy/National Nuclear Security Administrobust::ration. All
 // rights in the program are reserved by Triad National Security, LLC,
 // and the U.S. Department of Energy/National Nuclear Security
-// Administration. The Government is granted for itself and others
+// Administrobust::ration. The Government is granted for itself and others
 // acting on its behalf a nonexclusive, paid-up, irrevocable worldwide
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
@@ -74,7 +74,7 @@ Vec operator*(Real a, Vec b) {
 KOKKOS_FORCEINLINE_FUNCTION
 Vec operator/(Vec a, Real b) {
   Vec out;
-  SPACELOOP(i) out(i) = ratio(a(i), b);
+  SPACELOOP(i) out(i) = robust::ratio(a(i), b);
   return out;
 }
 
@@ -115,7 +115,7 @@ Tens2 operator*(Tens2 a, Real b) {
 KOKKOS_FORCEINLINE_FUNCTION
 Tens2 operator/(Tens2 a, Real b) {
   Tens2 out;
-  SPACELOOP2(i, j) { out(i, j) = ratio(a(i, j), b); }
+  SPACELOOP2(i, j) { out(i, j) = robust::ratio(a(i, j), b); }
   return out;
 }
 

@@ -11,7 +11,7 @@
 // distribute copies to the public, perform publicly and display
 // publicly, and to permit others to do so.
 
-// #include <complex>
+// #include <Kokkos::complex>
 #include <Kokkos_Complex.hpp>
 #include <sstream>
 #include <typeinfo>
@@ -25,7 +25,6 @@
 
 using Geometry::NDFULL;
 using Geometry::NDSPACE;
-using Kokkos::complex;
 
 namespace linear_modes {
 
@@ -84,31 +83,31 @@ void ProblemGenerator(MeshBlock *pmb, ParameterInput *pin) {
   double k1 = kk;
   double k2 = kk;
 
-  complex<double> omega = 0.;
-  complex<double> drho = 0.;
-  complex<double> dug = 0.;
-  complex<double> du1 = 0.;
-  complex<double> du2 = 0.;
-  complex<double> du3 = 0.;
-  complex<double> dB1 = 0.;
-  complex<double> dB2 = 0.;
-  complex<double> dB3 = 0.;
+  Kokkos::complex<double> omega = 0.;
+  Kokkos::complex<double> drho = 0.;
+  Kokkos::complex<double> dug = 0.;
+  Kokkos::complex<double> du1 = 0.;
+  Kokkos::complex<double> du2 = 0.;
+  Kokkos::complex<double> du3 = 0.;
+  Kokkos::complex<double> dB1 = 0.;
+  Kokkos::complex<double> dB2 = 0.;
+  Kokkos::complex<double> dB3 = 0.;
 
   if (physics == "hydro") {
     if (mode == "entropy") {
-      omega = complex<double>(0, 2. * M_PI / 10.);
+      omega = Kokkos::complex<double>(0, 2. * M_PI / 10.);
       drho = 1.;
       dug = 0.;
       du1 = 0.;
       // u10 = 0.1; // Uniform advection
     } else if (mode == "sound") {
       if (ndim == 1) {
-        omega = complex<double>(0., 2.7422068833892093);
+        omega = Kokkos::complex<double>(0., 2.7422068833892093);
         drho = 0.5804294924639215;
         dug = 0.7739059899518946;
         du1 = -0.2533201985524494;
       } else if (ndim == 2) {
-        omega = complex<double>(0., 3.8780661653218766);
+        omega = Kokkos::complex<double>(0., 3.8780661653218766);
         drho = 0.5804294924639213;
         dug = 0.7739059899518947;
         du1 = 0.1791244302079596;
@@ -124,7 +123,7 @@ void ProblemGenerator(MeshBlock *pmb, ParameterInput *pin) {
   } else if (physics == "mhd") {
     B10 = 1.0;
     if (mode == "slow") {
-      omega = complex<double>(0., 2.41024185339);
+      omega = Kokkos::complex<double>(0., 2.41024185339);
       drho = 0.558104461559;
       dug = 0.744139282078;
       du1 = -0.277124827421;
@@ -132,11 +131,11 @@ void ProblemGenerator(MeshBlock *pmb, ParameterInput *pin) {
       dB1 = -0.164323721928;
       dB2 = 0.164323721928;
     } else if (mode == "alfven") {
-      omega = complex<double>(0., 3.44144232573);
+      omega = Kokkos::complex<double>(0., 3.44144232573);
       du3 = 0.480384461415;
       dB3 = 0.877058019307;
     } else if (mode == "fast") {
-      omega = complex<double>(0., 5.53726217331);
+      omega = Kokkos::complex<double>(0., 5.53726217331);
       drho = 0.476395427447;
       dug = 0.635193903263;
       du1 = -0.102965815319;

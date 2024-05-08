@@ -87,7 +87,7 @@ std::shared_ptr<StateDescriptor> Initialize(ParameterInput *pin) {
 
     rho_min = pin->GetOrAddReal("fixup", "rho0_floor", 0.0);
     sie_min = pin->GetOrAddReal("fixup", "sie0_floor", 0.0);
-    lambda[2] = {0.};
+    // lambda[2] = {0.};
     T_min = eos_host.TemperatureFromDensityInternalEnergy(rho_min, sie_min, lambda);
     rho_max = pin->GetOrAddReal("fixup", "rho0_ceiling", 1e18);
     sie_max = pin->GetOrAddReal("fixup", "sie0_ceiling", 1e35);

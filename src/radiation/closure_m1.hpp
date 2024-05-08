@@ -2,10 +2,10 @@
 // program was produced under U.S. Government contract
 // 89233218CNA000001 for Los Alamos National Laboratory (LANL), which
 // is operated by Triad National Security, LLC for the U.S.
-// Department of Energy/National Nuclear Security Administration. All
+// Department of Energy/National Nuclear Security Administrobust::ration. All
 // rights in the program are reserved by Triad National Security, LLC,
 // and the U.S. Department of Energy/National Nuclear Security
-// Administration. The Government is granted for itself and others
+// Administrobust::ration. The Government is granted for itself and others
 // acting on its behalf a nonexclusive, paid-up, irrevocable worldwide
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
@@ -138,7 +138,7 @@ class ClosureM1 : public ClosureEdd<SET> {
                                       Tens2 *con_tilPi, Vec *con_tilf);
 
   //-------------------------------------------------------------------------------------
-  /// Perform NR iteration to find a root (xi, phi) of the M1 residual equations for a
+  /// Perform NR iterobust::ration to find a root (xi, phi) of the M1 residual equations for a
   /// given E and F_i
   KOKKOS_FUNCTION
   M1Result SolveClosure(Real E, Vec cov_F, Real *xi_out, Real *phi_out,
@@ -172,7 +172,7 @@ KOKKOS_FUNCTION void ClosureM1<SET>::GetM1GuessesFromEddington(const Real E,
   Real HEdd = sqrt(gamma->contractCov3Vectors(cov_HEdd, cov_HEdd) - vHEdd * vHEdd);
 
   // TODO(BRR) Use radiation ceilings value here?
-  *xi = std::min(ratio(HEdd, JEdd), 0.99);
+  *xi = std::min(robust::ratio(HEdd, JEdd), 0.99);
   *phi = 1.000001 * acos(-1);
 }
 
@@ -189,9 +189,9 @@ KOKKOS_FUNCTION M1Result ClosureM1<SET>::SolveClosure(Real E, Vec cov_F, Real *x
   const Real delta = 20 * std::numeric_limits<Real>::epsilon();
 
   // Normalize input and make sure we are slightly away from zero
-  cov_F(0) = ratio(cov_F(0), E) + 1.e3 * sgn(cov_F(0)) * std::numeric_limits<Real>::min();
-  cov_F(1) = ratio(cov_F(1), E) + 1.e3 * sgn(cov_F(1)) * std::numeric_limits<Real>::min();
-  cov_F(2) = ratio(cov_F(2), E) + 1.e3 * sgn(cov_F(2)) * std::numeric_limits<Real>::min();
+  cov_F(0) = robust::ratio(cov_F(0), E) + 1.e3 * sgn(cov_F(0)) * std::numeric_limits<Real>::min();
+  cov_F(1) = robust::ratio(cov_F(1), E) + 1.e3 * sgn(cov_F(1)) * std::numeric_limits<Real>::min();
+  cov_F(2) = robust::ratio(cov_F(2), E) + 1.e3 * sgn(cov_F(2)) * std::numeric_limits<Real>::min();
   E = 1.0;
 
   // Get the basis vectors for the search
@@ -239,7 +239,7 @@ KOKKOS_FUNCTION M1Result ClosureM1<SET>::SolveClosure(Real E, Vec cov_F, Real *x
 
     Real corrected_delta_xi = std::min(dx[0], xi - delta * xi);
     corrected_delta_xi = std::max(corrected_delta_xi, xi - (1 - delta * (1 - xi)));
-    Real alpha = ratio(corrected_delta_xi, dx[0]);
+    Real alpha = robust::ratio(corrected_delta_xi, dx[0]);
     alpha = std::min(alpha, 0.5 * 3.14159 / fabs(dx[1]));
     xi -= alpha * dx[0];
     phi -= alpha * dx[1];
@@ -288,7 +288,7 @@ KOKKOS_FUNCTION ClosureStatus ClosureM1<SET>::M1Residuals(const Real E, const Ve
   SPACELOOP(i) vTilf += cov_v(i) * con_tilf(i);
   Hf -= vTilf * vTilH;
   H = std::sqrt(H - vTilH * vTilH);
-  *fXi = xi - ratio(H, J);
+  *fXi = xi - robust::ratio(H, J);
   *fPhi = Hf - H;
 
   return ClosureStatus::success;
@@ -305,8 +305,8 @@ KOKKOS_FUNCTION ClosureStatus ClosureM1<SET>::M1FluidPressureTensor(const Real J
   SPACELOOP(i) H += cov_tilH(i) * con_tilH(i);
   SPACELOOP(i) vH += cov_tilH(i) * con_v(i);
   H = std::sqrt(H - vH * vH);
-  SPACELOOP(i) (*con_tilf)(i) = ratio(con_tilH(i), H);
-  const Real xi = std::max(std::min(1.0, ratio(H, J)), 0.0);
+  SPACELOOP(i) (*con_tilf)(i) = robust::ratio(con_tilH(i), H);
+  const Real xi = std::max(std::min(1.0, robust::ratio(H, J)), 0.0);
   const Real athin = 0.5 * (3 * closure(xi) - 1);
   // Calculate the projected rest frame radiation pressure tensor
   SPACELOOP2(i, j) {
@@ -354,17 +354,17 @@ KOKKOS_FUNCTION ClosureStatus ClosureM1<SET>::GetBasisVectors(const Vec cov_F,
   SPACELOOP(i) Fmag += cov_F(i) * con_F(i);
   Fmag = std::sqrt(Fmag);
   SPACELOOP(i) vl += cov_F(i) * con_v(i);
-  vl = ratio(vl, Fmag);
+  vl = robust::ratio(vl, Fmag);
   SPACELOOP(i) v2 += cov_v(i) * con_v(i);
-  const Real lam = ratio(1.0, W * (1 - vl));
+  const Real lam = robust::ratio(1.0, W * (1 - vl));
 
   // This goes to zero if F and v lie along one another and can create problems, probably
   // should be checking elsewhere that they are not along one another
   const Real aa =
       std::sqrt(v2 * (1 + 10 * std::numeric_limits<Real>::epsilon()) - vl * vl);
   SPACELOOP(i) {
-    (*con_tilg)(i) = ratio(con_F(i) * lam, Fmag) - W * con_v(i);
-    (*con_tild)(i) = ratio(ratio(con_F(i), Fmag) * (1 - lam / W) + con_v(i), aa);
+    (*con_tilg)(i) = robust::ratio(con_F(i) * lam, Fmag) - W * con_v(i);
+    (*con_tild)(i) = robust::ratio(robust::ratio(con_F(i), Fmag) * (1 - lam / W) + con_v(i), aa);
   }
   // if (aa < 1.e-6) (*con_tild) = {{0,0,0}};
 

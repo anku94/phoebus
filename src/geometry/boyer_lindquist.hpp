@@ -2,10 +2,10 @@
 // program was produced under U.S. Government contract
 // 89233218CNA000001 for Los Alamos National Laboratory (LANL), which
 // is operated by Triad National Security, LLC for the U.S.
-// Department of Energy/National Nuclear Security Administration. All
+// Department of Energy/National Nuclear Security Administrobust::ration. All
 // rights in the program are reserved by Triad National Security, LLC,
 // and the U.S. Department of Energy/National Nuclear Security
-// Administration. The Government is granted for itself and others
+// Administrobust::ration. The Government is granted for itself and others
 // acting on its behalf a nonexclusive, paid-up, irrevocable worldwide
 // license in this material to reproduce, prepare derivative works,
 // distribute copies to the public, perform publicly and display
@@ -79,11 +79,11 @@ class BoyerLindquist {
     ComputeDeltaMu_(r, th, r2, r3, sth, cth, DD, mu);
     const Real sth2 = sth * sth;
     LinearAlgebra::SetZero(g, NDFULL, NDFULL);
-    g[0][0] = -(1.0 - ratio(2.0, r * mu));
-    g[0][3] = g[3][0] = -ratio(2.0 * a_ * sth2, r * mu);
+    g[0][0] = -(1.0 - robust::ratio(2.0, r * mu));
+    g[0][3] = g[3][0] = -robust::ratio(2.0 * a_ * sth2, r * mu);
     g[1][1] = mu / DD;
     g[2][2] = r2 * mu;
-    g[3][3] = r2 * sth2 * (1.0 + ratio(a2_, r2) + ratio(2.0 * a2_ * sth2, r3 * mu));
+    g[3][3] = r2 * sth2 * (1.0 + robust::ratio(a2_, r2) + robust::ratio(2.0 * a2_ * sth2, r3 * mu));
   }
   KOKKOS_INLINE_FUNCTION
   void SpacetimeMetricInverse(Real X0, Real X1, Real X2, Real X3,
@@ -101,13 +101,13 @@ class BoyerLindquist {
     const Real common_denom =
         2 * a2_ * rm2 + r2 * (-4 + rm * (2 + DD * rm2)) + 4 * a2_ * sth2;
     LinearAlgebra::SetZero(g, NDFULL, NDFULL);
-    g[0][0] = ratio(-r3dm * rm2, common_denom);
+    g[0][0] = robust::ratio(-r3dm * rm2, common_denom);
     g[0][3] = g[3][0] =
-        -ratio(a_ * r3dm * sth2,
+        -robust::ratio(a_ * r3dm * sth2,
                a2_ * rm2 + r2 * (-2 + rm * (1 - DD + 0.5 * DD * rm)) + 2 * a2_ * sth2);
-    g[1][1] = ratio(mu, DD);
+    g[1][1] = robust::ratio(mu, DD);
     g[2][2] = r2 * mu;
-    g[3][3] = ratio(r3dm * (2 * a2_ + r2 * (2 + DD * rm)) * sth2, common_denom);
+    g[3][3] = robust::ratio(r3dm * (2 * a2_ + r2 * (2 + DD * rm)) * sth2, common_denom);
   }
   KOKKOS_INLINE_FUNCTION
   void Metric(Real X0, Real X1, Real X2, Real X3, Real g[NDSPACE][NDSPACE]) const {
@@ -119,9 +119,9 @@ class BoyerLindquist {
     ComputeDeltaMu_(r, th, r2, r3, sth, cth, DD, mu);
     const Real r3dm = r3 * DD * mu;
     LinearAlgebra::SetZero(g, NDSPACE, NDSPACE);
-    g[0][0] = ratio(DD, mu);
-    g[1][1] = ratio(1., r2 * mu);
-    g[2][2] = ratio((r * mu - 2) * sth * sth, r3dm);
+    g[0][0] = robust::ratio(DD, mu);
+    g[1][1] = robust::ratio(1., r2 * mu);
+    g[2][2] = robust::ratio((r * mu - 2) * sth * sth, r3dm);
   }
   KOKKOS_INLINE_FUNCTION
   void MetricInverse(Real X0, Real X1, Real X2, Real X3, Real g[NDSPACE][NDSPACE]) const {
@@ -143,10 +143,10 @@ class BoyerLindquist {
     ContravariantShift(X0, X1, X2, X3, beta);
 
     LinearAlgebra::SetZero(g, NDSPACE, NDSPACE);
-    g[0][0] = ratio(mu, DD);
+    g[0][0] = robust::ratio(mu, DD);
     g[1][1] = r2 * mu;
-    g[2][2] = ratio(r3dm * (2 * a2_ + r2 * (2 + DD * rm)) * sth2, denom);
-    g[2][2] += ratio(beta[2] * beta[2], alpha * alpha);
+    g[2][2] = robust::ratio(r3dm * (2 * a2_ + r2 * (2 + DD * rm)) * sth2, denom);
+    g[2][2] += robust::ratio(beta[2] * beta[2], alpha * alpha);
   }
   KOKKOS_INLINE_FUNCTION
   Real DetGamma(Real X0, Real X1, Real X2, Real X3) const {
@@ -161,7 +161,7 @@ class BoyerLindquist {
     const Real sth2 = sth * sth;
     // TODO(JMM): This is a little silly. Could factor to remove a few
     // multiplications
-    return std::sqrt(std::abs(ratio(r * mu - 2, r5 * mu3 * sth2)));
+    return std::sqrt(std::abs(robust::ratio(r * mu - 2, r5 * mu3 * sth2)));
   }
   KOKKOS_INLINE_FUNCTION
   Real DetG(Real X0, Real X1, Real X2, Real X3) const {
@@ -202,22 +202,22 @@ class BoyerLindquist {
     Real denom2 = (a2_ + r * (r - 2)) * common_denom;
     denom2 *= denom2;
 
-    dg[0][0][1] = ratio(-a6 + 2 * r6 + a2_ * r3 * r3m4 +
+    dg[0][0][1] = robust::ratio(-a6 + 2 * r6 + a2_ * r3 * r3m4 +
                             a2_ * (-a4 - 2 * a2_ * r2 + (4 - r) * r3) * c2th,
                         denom2);
     dg[0][3][1] = dg[3][0][1] =
-        2 * a_ * ratio(r2 * (a2_ + r * r3m4) + a2_ * (r - a_) * (r + a_) * cth2, denom2);
-    dg[1][1][1] = 2 * ratio(r * (r - a2_) + a2_ * (r - 1) * cth2, denom1);
-    dg[2][2][1] = -ratio(2 * r, denom1);
+        2 * a_ * robust::ratio(r2 * (a2_ + r * r3m4) + a2_ * (r - a_) * (r + a_) * cth2, denom2);
+    dg[1][1][1] = 2 * robust::ratio(r * (r - a2_) + a2_ * (r - 1) * cth2, denom1);
+    dg[2][2][1] = -robust::ratio(2 * r, denom1);
     dg[3][3][1] =
-        ratio(2 * r2 * (a2_ - rm2 * rm2 * r) - 2 * a2_ * (a2_ + r2 * (2 * r - 3)) * cth2 -
+        robust::ratio(2 * r2 * (a2_ - rm2 * rm2 * r) - 2 * a2_ * (a2_ + r2 * (2 * r - 3)) * cth2 -
                   2 * a4 * (r - 1) * cth4,
               denom2 * sth2);
 
-    dg[0][0][2] = -ratio(4 * a2_ * r * (a2_ + r2) * cth * sth, denom2);
-    dg[0][3][2] = dg[3][0][2] = -ratio(4 * a3 * r * cth * sth, denom2);
-    dg[1][1][2] = ratio(a2_ * (a2_ + r * (r - 2)) * s2th, denom1);
-    dg[2][2][2] = ratio(a2_ * s2th, denom1);
+    dg[0][0][2] = -robust::ratio(4 * a2_ * r * (a2_ + r2) * cth * sth, denom2);
+    dg[0][3][2] = dg[3][0][2] = -robust::ratio(4 * a3 * r * cth * sth, denom2);
+    dg[1][1][2] = robust::ratio(a2_ * (a2_ + r * (r - 2)) * s2th, denom1);
+    dg[2][2][2] = robust::ratio(a2_ * s2th, denom1);
 
     // g[3][3][2] is its own beast
     const Real a2pr2 = a2_ + r2;
@@ -228,7 +228,7 @@ class BoyerLindquist {
     Real den = (a2_ + 2 * r2 + a2_ * c2th) * sth2;
     den *= den;
     den *= (a2_ + rm2 * r) * a2pr2;
-    dg[3][3][2] = ratio(num, den);
+    dg[3][3][2] = robust::ratio(num, den);
   }
 
   KOKKOS_INLINE_FUNCTION
@@ -275,8 +275,8 @@ class BoyerLindquist {
     */
     r2 = r * r;
     r3 = r2 * r;
-    DD = 1. - ratio(2., r) + ratio(a2_, r2);
-    mu = 1. + ratio(a2_ * cth * cth, r2);
+    DD = 1. - robust::ratio(2., r) + robust::ratio(a2_, r2);
+    mu = 1. + robust::ratio(a2_ * cth * cth, r2);
   }
   Real dx_ = 1e-8;
   Real a_ = 0;

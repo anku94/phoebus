@@ -665,7 +665,7 @@ TaskStatus CalculateFluxesImpl(T *rc) {
           Real kappaH = sqrt((v(idx_kappaH(ispec), k, j, i) *
                               v(idx_kappaH(ispec), k - koff, j - joff, i - ioff)));
 
-          const Real a = tanh(ratio(1.0, std::pow(std::abs(kappaH * dx), 1)));
+          const Real a = tanh(robust::ratio(1.0, std::pow(std::abs(kappaH * dx), 1)));
 
           // Calculate the observer frame quantities on either side of the interface
           /// TODO: (LFR) Add other contributions to the asymptotic flux
