@@ -192,3 +192,7 @@ target_link_libraries(phoebus PRIVATE parthenon
 if (PHOEBUS_ENABLE_HDF5)
   target_link_libraries(phoebus PRIVATE hdf5::hdf5 hdf5::hdf5_hl)
 endif()
+
+install(TARGETS phoebus
+  RUNTIME DESTINATION bin
+)
